@@ -8,24 +8,27 @@ import com.javanauta.usuario.infrastructure.entity.Telefone;
 import com.javanauta.usuario.infrastructure.entity.Usuario;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class UsuarioConverter {
 
-    /* CONVERTER DTO PARA ENTITY */
+    // converter de DTO para Entity
     public Usuario paraUsuario(UsuarioDTO usuarioDTO) {
         return Usuario.builder()
                 .nome(usuarioDTO.getNome())
                 .email(usuarioDTO.getEmail())
                 .senha(usuarioDTO.getSenha())
-                .enderecos(paraListEnderecos(usuarioDTO.getEnderecosDTO()))
-                .telefones(paraListTelefones(usuarioDTO.getTelefonesDTO()))
+                .enderecos(paraListaEndereco(usuarioDTO.getEndereco()))
+                .telefones(paraListaTelefone(usuarioDTO.getTelefone()))
                 .build();
     }
 
-    public Endereco paraEndereco(EnderecoDTO enderecoDTO){
+    public List<Endereco> paraListaEndereco(List<EnderecoDTO> listaEnderecoDTO) {
+        return listaEnderecoDTO.stream().map(this::paraEndereco).toList();
+    }
+
+    public Endereco paraEndereco(EnderecoDTO enderecoDTO) {
         return Endereco.builder()
                 .rua(enderecoDTO.getRua())
                 .numero(enderecoDTO.getNumero())
@@ -36,31 +39,31 @@ public class UsuarioConverter {
                 .build();
     }
 
-    public Telefone paraTelefone(TelefoneDTO telefoneDTO){
+    public List<Telefone> paraListaTelefone(List<TelefoneDTO> listaTelefoneDTO) {
+        return listaTelefoneDTO.stream().map(this::paraTelefone).toList();
+    }
+
+    public Telefone paraTelefone(TelefoneDTO telefoneDTO) {
         return Telefone.builder()
                 .numero(telefoneDTO.getNumero())
                 .ddd(telefoneDTO.getDdd())
                 .build();
     }
 
-    public List<Endereco> paraListEnderecos(List<EnderecoDTO> enderecoDTOS){
-        return enderecoDTOS.stream().map(this::paraEndereco).toList();
-    }
-
-    public List<Telefone> paraListTelefones(List<TelefoneDTO> telefoneDTO) {
-        return telefoneDTO.stream().map(this::paraTelefone).toList();
-    }
-
-    /* CONVERTER ENTITY PARA DTO */
+    // Converter de Entity para DTO
 
     public UsuarioDTO paraUsuarioDTO(Usuario usuario){
         return UsuarioDTO.builder()
                 .nome(usuario.getNome())
                 .email(usuario.getEmail())
                 .senha(usuario.getSenha())
-                .enderecosDTO(paraListEnderecoDTO(usuario.getEnderecos()))
-                .telefonesDTO(paraListTelefoneDTO(usuario.getTelefones()))
+                .endereco(paraListaEnderecoDTO(usuario.getEnderecos()))
+                .telefone(paraListaTelefoneDTO(usuario.getTelefones()))
                 .build();
+    }
+
+    public List<EnderecoDTO> paraListaEnderecoDTO(List<Endereco> listaEndereco){
+        return listaEndereco.stream().map(this::paraEnderecoDTO).toList();
     }
 
     public EnderecoDTO paraEnderecoDTO(Endereco endereco){
@@ -74,18 +77,14 @@ public class UsuarioConverter {
                 .build();
     }
 
+    public List<TelefoneDTO> paraListaTelefoneDTO(List<Telefone> listaTelefone){
+        return listaTelefone.stream().map(this::paraTelefoneDTO).toList();
+    }
+
     public TelefoneDTO paraTelefoneDTO(Telefone telefone){
         return TelefoneDTO.builder()
                 .numero(telefone.getNumero())
                 .ddd(telefone.getDdd())
                 .build();
-    }
-
-    public List<EnderecoDTO> paraListEnderecoDTO(List<Endereco> enderecos) {
-        return enderecos.stream().map(this::paraEnderecoDTO).toList();
-    }
-
-    public List<TelefoneDTO> paraListTelefoneDTO(List<Telefone> telefones) {
-        return telefones.stream().map(this::paraTelefoneDTO).toList();
     }
 }
