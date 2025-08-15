@@ -19,8 +19,8 @@ public class UsuarioConverter {
                 .nome(usuarioDTO.getNome())
                 .email(usuarioDTO.getEmail())
                 .senha(usuarioDTO.getSenha())
-                .enderecos(paraListaEndereco(usuarioDTO.getEnderecos()))
-                .telefones(paralistaTelefone(usuarioDTO.getTelefones()))
+                .enderecos(paraListaEndereco(usuarioDTO.getEndereco()))
+                .telefones(paralistaTelefone(usuarioDTO.getTelefone()))
                 .build();
     }
 
@@ -57,8 +57,8 @@ public class UsuarioConverter {
                 .nome(usuario.getNome())
                 .email(usuario.getEmail())
                 .senha(usuario.getSenha())
-                .enderecos(paraListaEnderecoDTO(usuario.getEnderecos()))
-                .telefones(paralistaTelefoneDTO(usuario.getTelefones()))
+                .endereco(paraListaEnderecoDTO(usuario.getEnderecos()))
+                .telefone(paralistaTelefoneDTO(usuario.getTelefones()))
                 .build();
     }
 
@@ -80,8 +80,8 @@ public class UsuarioConverter {
                 .build();
     }
 
-    public List<EnderecoDTO> paraListaEnderecoDTO(List<Endereco> listaEndereco) {
-        return listaEndereco.stream().map(this::paraEnderecoDTO).toList();
+    public List<EnderecoDTO> paraListaEnderecoDTO(List<Endereco> listaEnderecoDTO) {
+        return listaEnderecoDTO.stream().map(this::paraEnderecoDTO).toList();
     }
 
     public List<TelefoneDTO> paralistaTelefoneDTO(List<Telefone> listaTelefoneDTO) {
