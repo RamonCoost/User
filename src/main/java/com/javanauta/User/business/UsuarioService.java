@@ -7,6 +7,7 @@ import com.javanauta.User.infrastructure.exception.ConflictException;
 import com.javanauta.User.infrastructure.exception.ResourceNotFoundException;
 import com.javanauta.User.infrastructure.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,13 +16,16 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final UsuarioConverter usuarioConverter;
+    private final PasswordEncoder passwordEncoder;
 
     public UsuarioDTO salvaUsuario(UsuarioDTO usuarioDTO) {
+        emailExiste(usuarioDTO.getEmail());
+        usuarioDTO.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
         Usuario usuario = usuarioConverter.paraUsuario(usuarioDTO);
-        return usuarioConverter.paraUsuarioDTO(usuario);
+        return usuarioConverter.paraUsuarioDTO(usuarioRepository.save(usuario));
     }
 
-    public void EmailExiste(String email) {
+    public void emailExiste(String email) {
         try {
             boolean existe = verificaEmailExistente(email);
             if (existe) {
@@ -41,5 +45,9 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email).orElseThrow(
                 () -> new ResourceNotFoundException("Email não encontrado " + email)
         );
+    }
+
+    public void deleteUsuarioPorEmail(String email) {
+        usuarioRepository.deleteByEmail(email);
     }
 }
