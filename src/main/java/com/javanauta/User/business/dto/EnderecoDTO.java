@@ -1,0 +1,19 @@
+package com.javanauta.User.business.dto;
+
+import lombok.*;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
+public class EnderecoDTO {
+
+    private long id;
+    private String rua;
+    private String numero;
+    private String complemento;
+    private String cidade;
+    private String estado;
+    private String cep;
+}
