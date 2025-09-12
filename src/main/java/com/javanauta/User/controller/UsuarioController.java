@@ -1,9 +1,11 @@
 package com.javanauta.User.controller;
 
-import com.javanauta.User.business.UsuarioService;
+import com.javanauta.User.business.service.UsuarioService;
 import com.javanauta.User.business.dto.EnderecoDTO;
 import com.javanauta.User.business.dto.TelefoneDTO;
 import com.javanauta.User.business.dto.UsuarioDTO;
+import com.javanauta.User.business.service.ViaCepService;
+import com.javanauta.User.infrastructure.client.ViaCepDTO;
 import com.javanauta.User.infrastructure.security.JwtUtil;
 import com.javanauta.User.infrastructure.security.SecurityConfig;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +19,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.*;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/usuario")
@@ -27,6 +31,7 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final ViaCepService viaCepService;
 
     @PostMapping
     @Operation(summary = "Salvar Usuário", description = "Salva Usuário")
@@ -126,5 +131,15 @@ public class UsuarioController {
     public ResponseEntity<TelefoneDTO> cadastraTelefone(@RequestBody TelefoneDTO dto,
                                                         @RequestHeader("Authorization") String token){
         return ResponseEntity.ok(usuarioService.cadastraTelefone(token,dto));
+    }
+
+    @GetMapping("/endereco/{cep}")
+    @Operation(summary = "Buscar Cep", description = "Buscar cep do usuário")
+    @ApiResponse(responseCode = "200", description = "endereço encontrado com sucesso")
+    @ApiResponse(responseCode = "403", description = "Usuário não cadastrado")
+    @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
+    @ApiResponse(responseCode = "500", description = "Erro de Servidor")
+    public ResponseEntity<ViaCepDTO> buscarDadosCep(@PathVariable("cep") String cep){
+        return ResponseEntity.ok(viaCepService.buscaDadosEndereco(cep));
     }
 }

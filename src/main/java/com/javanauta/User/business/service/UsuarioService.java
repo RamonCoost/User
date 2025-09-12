@@ -1,4 +1,4 @@
-package com.javanauta.User.business;
+package com.javanauta.User.business.service;
 
 import com.javanauta.User.business.converter.UsuarioConverter;
 import com.javanauta.User.business.dto.EnderecoDTO;
