@@ -14,7 +14,6 @@ import com.javanauta.User.infrastructure.repository.TelefoneRepository;
 import com.javanauta.User.infrastructure.repository.UsuarioRepository;
 import com.javanauta.User.infrastructure.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.sql.results.graph.entity.EntityFetch;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
