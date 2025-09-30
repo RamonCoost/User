@@ -1,9 +1,9 @@
 package com.javanauta.User.controller;
 
-import com.javanauta.User.business.service.UsuarioService;
 import com.javanauta.User.business.dto.EnderecoDTO;
 import com.javanauta.User.business.dto.TelefoneDTO;
 import com.javanauta.User.business.dto.UsuarioDTO;
+import com.javanauta.User.business.service.UsuarioService;
 import com.javanauta.User.business.service.ViaCepService;
 import com.javanauta.User.infrastructure.client.ViaCepDTO;
 import com.javanauta.User.infrastructure.security.JwtUtil;
@@ -15,11 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import javax.swing.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,8 +25,6 @@ import javax.swing.*;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
     private final ViaCepService viaCepService;
 
     @PostMapping
@@ -49,11 +43,8 @@ public class UsuarioController {
     @ApiResponse(responseCode = "403", description = "Usuário não cadastrado")
     @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
     @ApiResponse(responseCode = "500", description = "Erro de Servidor")
-    public String login(@RequestBody UsuarioDTO usuarioDTO) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(usuarioDTO.getEmail(), usuarioDTO.getSenha())
-        );
-        return "Bearer " + jwtUtil.generateToken(authentication.getName());
+    public ResponseEntity<String> login(@RequestBody UsuarioDTO usuarioDTO) {
+        return ResponseEntity.ok(usuarioService.autenticarUsario(usuarioDTO));
     }
 
     @GetMapping
